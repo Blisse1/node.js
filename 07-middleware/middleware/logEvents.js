@@ -9,17 +9,23 @@ const path = require("path");
 const logEvents = async (message, logName) => {
     const dateTime = `${format(new Date(), "yyyyMMdd\tHH:mm:ss")}`;
     const logItem = `${dateTime}\t${uuid()}\t${message}`;
-    console.log(logItem);
     try {
-        if(!fs.existsSync(path.join(__dirname, "logs"))){
-            await fsPromises.mkdir(path.join(__dirname, "logs"));
+        if(!fs.existsSync(path.join(__dirname, "..", "logs"))){
+            await fsPromises.mkdir(path.join(__dirname, "..", "logs"));
         }
-        await fsPromises.appendFile(path.join(__dirname, "logs", logName), logItem);
+        await fsPromises.appendFile(path.join(__dirname, "..", "logs", logName), logItem);
     }catch (err) {
         console.log(err)
     }
 }
-module.exports = logEvents;
+
+const logger = (req, res, next) => {
+    logEvents(`${req.method}\n${req.headers.origin}\n${req.url}`, "reqLog.txt");
+    console.log(`${req.method} ${req.path}`);
+    next();
+}
+
+module.exports = {logger, logEvents};
 
 // ^3.4.0
 // 3 as major version, 4 minor version, 0 a patch
