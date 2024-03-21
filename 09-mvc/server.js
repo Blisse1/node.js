@@ -1,22 +1,11 @@
 const express = require("express");
 const cors = require("cors");
+const corsOptions = require("./config/corsOptions");
 const {logger} = require("./middleware/logEvents");
 const errorHandler = require("./middleware/errHandler");
 const app = express();
 const path = require("path");
 const PORT = process.env.PORT || 3500;
-
-const whitelist = ["http://localhost:3500", "https://www.yourdomain.com", "http://127.0.0.1:5500"];
-const corsOptions = {
-    origin: (origin, callback) => { 
-        if(whitelist.indexOf(origin) !== -1 || !origin){ 
-            callback(null, true); 
-        }else {
-            callback(new Error ("Not allowed by CORS"));
-        }     
-    }, 
-    optionsSuccessStatus: 200
-}
 
 app.use(logger);
 app.use(cors(corsOptions));
@@ -26,11 +15,9 @@ app.use(express.json());
 
 // serve static files
 app.use(express.static(path.join(__dirname, "/public")));
-app.use("/subdir", express.static(path.join(__dirname, "/public"))); // you need it to be public bc its static
 
 // Routes
 app.use("/", require("./routes/root")); // para las rutas que usan el root
-app.use("/subdir", require("./routes/subdir")); // para las rutas que usan /subdir
 app.use("/employees", require("./routes/api/employees")); 
 
 app.use("/*", (req, res) => {
