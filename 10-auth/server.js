@@ -19,6 +19,8 @@ app.use(express.static(path.join(__dirname, "/public")));
 // Routes
 app.use("/", require("./routes/root")); // para las rutas que usan el root
 app.use("/employees", require("./routes/api/employees")); 
+app.use("/register", require("./routes/register")); 
+app.use("/auth", require("./routes/auth")); 
 
 app.use("/*", (req, res) => {
     res.status(404);
