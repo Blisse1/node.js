@@ -4,7 +4,7 @@ const corsOptions = require("./config/corsOptions");
 const {logger} = require("./middleware/logEvents");
 const errorHandler = require("./middleware/errHandler");
 const verifyJWT = require("./middleware/verifyJWT"); // to protect multiple routes
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
 const app = express();
 const path = require("path");
 const PORT = process.env.PORT || 3500;
@@ -26,6 +26,7 @@ app.use("/", require("./routes/root")); // para las rutas que usan el root
 app.use("/register", require("./routes/register")); 
 app.use("/auth", require("./routes/auth")); 
 app.use("/refresh", require("./routes/refresh")); 
+app.use("/logout", require("./routes/logout")); 
 
 app.use(verifyJWT); 
 app.use("/employees", require("./routes/api/employees")); 
